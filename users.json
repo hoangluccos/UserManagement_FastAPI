@@ -1,1 +1,17 @@
-[{"name": "Luc", "age": 22, "fullName": "Hoang Luc"}]
+[
+  {
+    "name": "Luc",
+    "age": 22,
+    "fullName": "Hoang Luc"
+  },
+  {
+    "name": "lucas",
+    "age": 0,
+    "fullName": "lucas_nguyen"
+  },
+  {
+    "name": "lucas1",
+    "age": 0,
+    "fullName": "lucas_nguyen1"
+  }
+]

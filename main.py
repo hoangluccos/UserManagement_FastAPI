@@ -1,17 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import os
 import json
-from pydantic import BaseModel
+import schemas
 
 app = FastAPI()
 
 USERS_FILE = "users.json"
 USER_DATABASE = []
 
-class User(BaseModel):
-    name: str
-    age: int
-    fullName: str
 
 if os.path.exists(USERS_FILE):
     try:
@@ -32,9 +28,23 @@ def get_all_users():
         }
     }
 
+
 @app.post("/user")
-def add_new_user(newUser: User):
+def add_update_user(newUser: schemas.User):
     user_dict = newUser.dict()
+
+    for idx, user in enumerate(USER_DATABASE):
+        #update user
+        if(user['name'].lower() == newUser.name.lower()):
+            USER_DATABASE[idx] = user_dict
+            with open(USERS_FILE, "w") as f:
+                json.dump(USER_DATABASE, f, indent=2)
+            return {
+                "result": {
+                    "message": f"User {newUser.name} was updated."
+                }
+            }
+    #add user
     USER_DATABASE.append(user_dict)
     with open(USERS_FILE, "w") as f:
         json.dump(USER_DATABASE, f, indent=2)
@@ -43,6 +53,8 @@ def add_new_user(newUser: User):
             "message": f"User {newUser.name} was added."
         }
     }
+    
+    
 
 @app.get("/user/{name}")
 def find_user_by_name(username: str):
